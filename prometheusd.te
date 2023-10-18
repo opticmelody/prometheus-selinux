@@ -50,6 +50,9 @@ systemd_unit_file(alertmanager_prometheusd_unit_t)
 type alertmanager_prometheusd_port_t;
 corenet_port(alertmanager_prometheusd_port_t)
 
+# grafana
+type grafanad_port_t;
+corenet_port(grafanad_port_t)
 
 ########################################
 #
@@ -79,6 +82,11 @@ corenet_tcp_connect_hplip_port(prometheusd_t)
 corenet_tcp_connect_websm_port(prometheusd_t)
 
 sysnet_read_config(prometheusd_t)
+
+allow prometheusd_t prometheusd_db_t:file map;
+allow prometheusd_t sysfs_t:file { open read };
+allow prometheusd_t prometheusd_db_t:dir write;
+allow prometheusd_t prometheusd_db_t:file { getattr read write };
 
 
 ###################################
@@ -113,6 +121,7 @@ fs_getattr_tmpfs(node_prometheusd_exporter_t)
 fs_getattr_xattr_fs(node_prometheusd_exporter_t)
 
 init_dbus_chat(node_prometheusd_exporter_t)
+init_read_state(node_prometheusd_exporter_t)
 init_status(node_prometheusd_exporter_t)
 
 rpc_search_nfs_state_data(node_prometheusd_exporter_t)
@@ -155,3 +164,6 @@ corenet_tcp_connect_smtp_port(alertmanager_prometheusd_t)
 sysnet_read_config(alertmanager_prometheusd_t)
 
 miscfiles_read_generic_certs(alertmanager_prometheusd_t)
+
+# connection to grafana
+allow prometheusd_t grafanad_port_t:tcp_socket name_connect;

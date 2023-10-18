@@ -1,4 +1,7 @@
 # prometheus-selinux
+
+A fork of georou's original repository.
+
 ![rpmbuildstatus](https://copr.fedorainfracloud.org/coprs/georou/Prometheus/package/prometheus/status_image/last_build.png)
 
 **This policy is designed to be a base to build upon.** Currently I would consider this close to finished. It has now been tested in production to be working as intended.
@@ -53,7 +56,7 @@ install -d -m 0750 -o prometheus -g prometheus /etc/{alertmanager,prometheus}
 # Restore all the correct context labels after creating the directories and setting owner,group permissions
 restorecon -RvF /etc/{alertmanager,prometheus}
 restorecon -RvF /etc/systemd/system/{alertmanager.service,prometheus.service,node-exporter.service}
-restorecon -RvF /opt/{alertmanager,prometheus}
+restorecon -RvF /var/lib/{alertmanager,prometheus}
 restorecon -RvF /usr/local/bin/{alertmanager,node_exporter,prometheus,promtool}
 
 # Label alertmananger default port. Change if needed.

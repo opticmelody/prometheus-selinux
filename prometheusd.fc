@@ -2,7 +2,7 @@
 /etc/systemd/system/prometheus.*		--      gen_context(system_u:object_r:prometheusd_unit_t,s0)
 /usr/lib/systemd/system/prometheus.*		--     	gen_context(system_u:object_r:prometheusd_unit_t,s0)
 /etc/prometheus(/.*)?					gen_context(system_u:object_r:prometheusd_conf_t,s0)
-/opt/prometheus/data(/.*)?				gen_context(system_u:object_r:prometheusd_db_t,s0)
+/var/lib/prometheus(/.*)?				gen_context(system_u:object_r:prometheusd_db_t,s0)
 /usr/local/bin/prometheus			--	gen_context(system_u:object_r:prometheusd_exec_t,s0)
 /usr/local/bin/promtool				--	gen_context(system_u:object_r:prometheusd_exec_t,s0)
 
@@ -10,7 +10,7 @@
 /etc/systemd/system/alertmanager.*		--      gen_context(system_u:object_r:alertmanager_prometheusd_unit_t,s0)
 /usr/lib/systemd/system/alertmanager.*		--     	gen_context(system_u:object_r:alertmanager_prometheusd_unit_t,s0)
 /etc/alertmanager(/.*)?					gen_context(system_u:object_r:alertmanager_prometheusd_conf_t,s0)
-/opt/alertmanager/data(/.*)?				gen_context(system_u:object_r:alertmanager_prometheusd_data_t,s0)
+/var/lib/alertmanager(/.*)?				gen_context(system_u:object_r:alertmanager_prometheusd_data_t,s0)
 /usr/local/bin/alertmanager			--	gen_context(system_u:object_r:alertmanager_prometheusd_exec_t,s0)
 /usr/local/bin/amtool				--	gen_context(system_u:object_r:alertmanager_prometheusd_exec_t,s0)
 

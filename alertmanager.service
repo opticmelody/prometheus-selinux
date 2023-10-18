@@ -5,7 +5,7 @@ After=network.target
 [Service]
 User=prometheus
 Group=prometheus
-ExecStart=/usr/local/bin/alertmanager --config.file /etc/alertmanager/alertmanager.yml --storage.path /opt/alertmanager/data
+ExecStart=/usr/local/bin/alertmanager --config.file /etc/alertmanager/alertmanager.yml --storage.path /var/lib/alertmanager
 Restart=on-failure
 
 [Install]
