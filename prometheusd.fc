@@ -19,3 +19,8 @@
 /usr/lib/systemd/system/node-exporter.*		--     	gen_context(system_u:object_r:node_prometheusd_exporter_unit_t,s0)
 /usr/local/bin/node_exporter			--	gen_context(system_u:object_r:node_prometheusd_exporter_exec_t,s0)
 
+# snmp_exporter
+/etc/systemd/system/snmp-exporter.*		--      gen_context(system_u:object_r:snmp_prometheusd_exporter_unit_t,s0)
+/usr/lib/systemd/system/snmp-exporter.*		--     	gen_context(system_u:object_r:snmp_prometheusd_exporter_unit_t,s0)
+/usr/local/bin/snmp_exporter			--	gen_context(system_u:object_r:snmp_prometheusd_exporter_exec_t,s0)
+

@@ -1,4 +1,4 @@
-policy_module(prometheusd, 1.0.1)
+policy_module(prometheusd, 1.1)
 
 ########################################
 #
@@ -34,6 +34,7 @@ type prometheusd_port_t;
 corenet_port(prometheusd_port_t)
 
 prometheusd_exporter_template(node)
+prometheusd_exporter_template(snmp)
 prometheusd_module_template(alertmanager)
 
 # node_exporter
@@ -42,6 +43,13 @@ systemd_unit_file(node_prometheusd_exporter_unit_t)
 
 type node_prometheusd_exporter_port_t;
 corenet_port(node_prometheusd_exporter_port_t)
+
+# snmp_exporter
+type snmp_prometheusd_exporter_unit_t;
+systemd_unit_file(snmp_prometheusd_exporter_unit_t)
+
+type snmp_prometheusd_exporter_port_t;
+corenet_port(snmp_prometheusd_exporter_port_t)
 
 # alertmanager
 type alertmanager_prometheusd_unit_t;
@@ -63,6 +71,7 @@ allow prometheusd_t self:udp_socket create_stream_socket_perms;
 
 allow prometheusd_t alertmanager_prometheusd_port_t:tcp_socket name_connect;
 allow prometheusd_t node_prometheusd_exporter_port_t:tcp_socket name_connect;
+allow prometheusd_t snmp_prometheusd_exporter_port_t:tcp_socket name_connect;
 
 allow prometheusd_t prometheusd_port_t:tcp_socket name_connect;
 
@@ -98,6 +107,8 @@ allow node_prometheusd_exporter_t self:udp_socket create_stream_socket_perms;
 
 allow node_prometheusd_exporter_t self:netlink_route_socket create_netlink_socket_perms;
 allow node_prometheusd_exporter_t self:netlink_socket create_socket_perms;
+
+allow node_prometheusd_exporter_t node_prometheusd_exporter_port_t:tcp_socket name_bind;
 
 kernel_read_fs_sysctls(node_prometheusd_exporter_t)
 kernel_read_net_sysctls(node_prometheusd_exporter_t)
@@ -135,6 +146,25 @@ userdom_search_user_tmp_dirs(node_prometheusd_exporter_t)
 tunable_policy(`node_exporter_can_load_wifi_module',`
 	kernel_request_load_module(node_prometheusd_exporter_t) # Loads module net-pf-16-proto-16-family-nl80211. Probably used with --collector=wifi
 ')
+
+
+###################################
+#
+# snmp exporter local policy
+#
+allow snmp_prometheusd_exporter_t self:tcp_socket create_stream_socket_perms;
+allow snmp_prometheusd_exporter_t self:udp_socket create_stream_socket_perms;
+
+allow snmp_prometheusd_exporter_t self:netlink_route_socket create_netlink_socket_perms;
+allow snmp_prometheusd_exporter_t self:netlink_socket create_socket_perms;
+
+allow snmp_prometheusd_exporter_t snmp_prometheusd_exporter_port_t:tcp_socket name_bind;
+
+corenet_tcp_bind_generic_node(snmp_prometheusd_exporter_t)
+corenet_tcp_bind_hplip_port(snmp_prometheusd_exporter_t)
+# Used for supervisor and gmond. Uncomment if you need to use them
+#corenet_tcp_connect_tor_port(node_prometheusd_exporter_t)		# 9001/tcp node_exporter --collector=supervisord
+#corenet_tcp_connect_unreserved_ports(node_prometheusd_exporter_t)	# 8649/tcp node_exporter --collector=gmond MARKED AS DEPRECATED !!
 
 ###################################
 #
