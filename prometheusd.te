@@ -14,6 +14,11 @@ policy_module(prometheusd, 1.1)
 ## Allow node exporter to use the wifi collector which requires a kernel module to load
 ## </p>
 ## </desc>
+
+require {
+        type unreserved_port_t;
+}
+
 gen_tunable(node_exporter_can_load_wifi_module, false)
 
 type prometheusd_t;
@@ -97,6 +102,9 @@ allow prometheusd_t sysfs_t:file { open read };
 allow prometheusd_t prometheusd_db_t:dir write;
 allow prometheusd_t prometheusd_db_t:file { getattr read write };
 
+allow prometheusd_t fs_t:filesystem getattr;
+allow prometheusd_t unreserved_port_t:tcp_socket name_connect;
+
 
 ###################################
 #
@@ -159,6 +167,12 @@ allow snmp_prometheusd_exporter_t self:netlink_route_socket create_netlink_socke
 allow snmp_prometheusd_exporter_t self:netlink_socket create_socket_perms;
 
 allow snmp_prometheusd_exporter_t snmp_prometheusd_exporter_port_t:tcp_socket name_bind;
+
+allow snmp_prometheusd_exporter_t prometheusd_conf_t:dir search;
+allow snmp_prometheusd_exporter_t sysctl_net_t:dir search;
+allow snmp_prometheusd_exporter_t sysctl_net_t:file { open read };
+allow snmp_prometheusd_exporter_t sysfs_t:file { open read };
+allow snmp_prometheusd_exporter_t unreserved_port_t:tcp_socket name_bind;
 
 corenet_tcp_bind_generic_node(snmp_prometheusd_exporter_t)
 corenet_tcp_bind_hplip_port(snmp_prometheusd_exporter_t)
