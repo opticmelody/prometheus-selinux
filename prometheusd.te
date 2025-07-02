@@ -15,9 +15,13 @@ policy_module(prometheusd, 1.1)
 ## </p>
 ## </desc>
 
+# grafana and vector dependencies
 require {
         type unreserved_port_t;
+        type vector_port_t;
+        type grafana_port_t;
 }
+corenet_port(grafana_port_t)
 
 gen_tunable(node_exporter_can_load_wifi_module, false)
 
@@ -63,9 +67,6 @@ systemd_unit_file(alertmanager_prometheusd_unit_t)
 type alertmanager_prometheusd_port_t;
 corenet_port(alertmanager_prometheusd_port_t)
 
-# grafana
-type grafanad_port_t;
-corenet_port(grafanad_port_t)
 
 ########################################
 #
@@ -210,4 +211,5 @@ sysnet_read_config(alertmanager_prometheusd_t)
 miscfiles_read_generic_certs(alertmanager_prometheusd_t)
 
 # connection to grafana
-allow prometheusd_t grafanad_port_t:tcp_socket name_connect;
+allow prometheusd_t grafana_port_t:tcp_socket name_connect;
+allow prometheusd_t vector_port_t:tcp_socket name_connect;
